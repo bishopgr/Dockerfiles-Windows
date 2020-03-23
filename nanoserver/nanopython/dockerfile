@@ -3,10 +3,12 @@ FROM mcr.microsoft.com/powershell:lts-nanoserver-1903
 ADD installer/pyth-windows.zip .
 
 RUN pwsh -Command \
-	Expand-Archive -LiteralPath C:\pyth-windows.zip -DestinationPath C:\ ; \
+	Expand-Archive -LiteralPath C:\pyth-windows.zip -DestinationPath C:\Python ; \
 	Remove-Item C:\pyth-windows.zip -Force
 
 RUN reg add HKCU\Environment
-RUN setx PATH "%PATH%;C:\Python;C:\Python\Scripts\"
+USER ContainerAdministrator
+RUN setx /M PATH "%PATH%;C:\Python;C:\Python\Scripts\;"
+USER ContainerUser
 
 CMD ["C:\Python\python.exe"]
